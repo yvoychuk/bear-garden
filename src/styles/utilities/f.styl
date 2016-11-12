@@ -1,0 +1,62 @@
+$a1 = flex-start
+$a2 = center
+$a3 = flex-end
+$a13 = space-between
+
+$cases = '1-1' $a1 $a1
+        ,'1-2' $a1 $a2
+        ,'1-3' $a1 flex-end
+        ,'2-1' $a2 $a1
+        ,'2-2' $a2 center
+        ,'2-3' $a2 flex-end
+        ,'3-1' flex-end $a1
+        ,'3-2' flex-end center
+        ,'3-3' flex-end flex-end
+        ,'1-13' $a1 space-between
+        ,'2-13' center space-between
+        ,'3-13' flex-end space-between
+        ,'13-1' space-between $a1
+        ,'13-2' space-between center
+        ,'13-3' space-between flex-end
+        ,'13-13' space-between space-between
+
+f-almnt($jc, $ai)
+  display flex
+  justify-content $jc
+  align-items $ai
+
+$f-box
+  display flex
+
+$f-align
+  for $case in $cases
+    &-{unquote($case[0])}
+      $jc = $case[1]
+      $ai = $case[2]
+      f-almnt($jc, $ai)
+
+$f-grid
+  $grid-step = 24
+  for $size in 1..$grid-step
+    &-{$size}
+      flex-basis unit($size * (100 / $grid-step), '%')
+
+$f-wrap
+  flex-wrap wrap
+
+.f-box
+  @extend $f-box
+
+.f-align-1-1
+  @extend $f-align-1-1
+  color red
+
+.f-align-1-2
+  @extend $f-align-1-2
+
+for $size in 2 6 8 12 18
+  .f-grid-{$size}
+    @extend $f-grid-{$size}
+
+.f-wrap
+  @extend $f-wrap

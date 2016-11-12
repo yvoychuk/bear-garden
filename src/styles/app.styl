@@ -1,0 +1,59 @@
+set-path($model, $type = '')
+  $m-path = $model + '/'
+  $t-path = $type == '' ? $type : $type + '/'
+  $path = './' + $m-path + $t-path
+  return $path
+  
+p($name, $p = $path)
+  return $p + $name
+
+/*--------------------------
+  config
+--------------------------*/
+
+$path = set-path('config')
+
+// config file
+@require p('config')
+
+/*--------------------------
+  outer
+--------------------------*/
+
+$path = set-path('outer')
+
+// outer styles
+@require p('reset')
+
+/*--------------------------
+  typography
+--------------------------*/
+
+$path = set-path('typography')
+
+// typography settings
+@require p('typography')
+
+/*--------------------------
+  utilities
+--------------------------*/
+
+$path = set-path('utilities')
+
+// flexbox utilities
+@require p('f')
+
+// gaps settings
+@require p('gaps')
+
+// color settings
+@require p('colors')
+
+/*--------------------------
+  components
+--------------------------*/
+
+// global
+$path = set-path('components', 'global')
+
+@require p('page')

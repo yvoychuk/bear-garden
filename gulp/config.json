@@ -1,0 +1,23 @@
+{
+  "paths": {
+    "root": "../",
+    "server": {
+      "baseDir": "app"
+    },
+    "styles": {
+      "index": "app.styl",
+      "src": "src/styles/",
+      "dest": "app"
+    },
+    "markup": {
+      "index": "index.pug",
+      "src": "src/templates/",
+      "dest": "app"
+    },
+    "app": {
+      "index": "index.js",
+      "src": "src/app/",
+      "dest": "app"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+usebase($size)
+  return $global.base * $size
+
+paddings($size)
+  &-p-{$size}
+    padding: usebase($size)
+  &-px-{$size}
+    padding-left: usebase($size)
+    padding-right: usebase($size)
+  &-py-{$size}
+    padding-top: usebase($size)
+    padding-bottom: usebase($size)
+  &-pt-{$size}
+    padding-top: usebase($size)
+  &-pr-{$size}
+    padding-right: usebase($size)
+  &-pb-{$size}
+    padding-bottom: usebase($size)
+  &-pl-{$size}
+    padding-left: usebase($size)
+
+$gap
+  for $size in 0..20
+    paddings($size)
+
+.u-gap
+  
+  for $size in 2 4 6
+    paddings($size)
+
+$v-rythm
+  for $size in 0..20
+    &-{$size}
+      & > *
+        margin-bottom: usebase($size)
+        &:last-child
+          margin-bottom 0
+  
+$h-rythm
+  for $size in 0..20
+    &-{$size}
+      & > *
+        margin-right: usebase($size)
+        &:last-child
+          margin-right 0
+
+.u-rythm
+  for $size in 1..4
+    &-v-{$size}
+      @extend $v-rythm-{$size}
+    &-h-{$size}
+      @extend $h-rythm-{$size}  

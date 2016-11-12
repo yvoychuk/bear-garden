@@ -1,0 +1,31 @@
+$config = outerConfig
+
+$u-cc-brand
+  color: $config.color.brand
+
+$u-cbg-brand
+  background-color: unquote($config.color.brand)
+  
+$u-cbc-brand
+  border-color: $config.color.brand
+
+// !
+$i = outerConfig.flex.grid-step
+$scale-step = 100 / $i
+u-gray($degree, $step = $scale-step)
+  $amount = unit($degree * $step, '%')
+  $color = lighten(#000, $amount)
+  return $color
+
+$u-bg-gray
+  for $k in 0..10
+    &-{$k}
+      background-color u-gray($k * 2)
+   
+.u-cbg-brand
+  @extend $u-cbg-brand
+
+.u-cbg-gray
+  for $k in 0..10
+    &-{$k}
+      @extend $u-bg-gray-{$k}

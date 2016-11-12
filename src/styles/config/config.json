@@ -1,0 +1,13 @@
+{
+  "base": "8px",
+  "flex": {
+    "grid-step": 24
+  },
+  "color": {
+    "content": "#333",
+    "secondary": "#666",
+    "light": "#fff",
+    "brand": "#399bcc",
+    "gray-scale-step": 20
+  }
+}
