@@ -15,12 +15,12 @@ gulp.task('markup', function () {
   return markup(gulp, config);
 });
 
-gulp.task('server', ['styles', 'markup'], function () {
-  return server(gulp, bsync, config);
-});
-
 gulp.task('app', function () {
   return app(gulp, config);
+});
+
+gulp.task('server', ['styles', 'app', 'markup'], function () {
+  return server(gulp, bsync, config);
 });
 
 gulp.task('default', function (cb) {
