@@ -1,47 +1,63 @@
 // hash based
 import _ from "lodash";
+import utils from "./utils.js";
 
 class Router {
   constructor() {
     this.loc = window.location;
   }
 
-  register (pages) {
+  register (pages, props) {
     this.pages = pages;
+    this.props = props;
     this.init();
   }
 
   init () { 
-    let renderFn = this.render();
-    renderFn()
+    this.render();
     this.watchHashChange();
+    return false;
   }
 
-  current (val) {
-    return this.loc.href.match(/#(\/?)(.*)$/)[val];
+  current () {
+    let _c = /#(\/?)(?:.+)$/gi.exec(this.loc.href);
+    if (_c === null) {
+      return "index";
+    } else {
+      return _c[1].length === 0 ? _c[0].substring(1) : _c[0].substring(2);
+    }
   }
 
-  redirect (path) {
-    window.location.href = "http://localhost:3000/#aliens";
+  createNewPage (path, props) {
+    let NewPage = require("./pages/" + path + ".js");
+    let renderedPage = new NewPage({
+      root: props.root
+    });
     return false;
   }
 
   render () {
-    let currentPath = this.current(2);
-    let page = this.pages.find(function (p) {return p.path === currentPath})
-    let pageName = page.name === undefined ? page.path : page.name;
-    return require("./pages/" + pageName + ".js").render;
+    try {
+      let currentPath = this.current();
+      let page = this.pages.find(function (p) {return p.path === currentPath || p.name === currentPath})
+      let pageName = page.path;
+      this.createNewPage(page.path, this.props);
+    } catch (e) {
+      console.log(e)
+      this.createNewPage("_system/404", this.props);
+    }
   }
 
   watchHashChange () {
     let that = this;
     window.addEventListener("hashchange", this.onHashChange.bind(that));
+    return false;
   }
 
   onHashChange (event) {
     window.location.href = event.newURL;
-    let renderFn = this.render();
-    renderFn();
+    window.location.reload()
+    return false;
   }
 
 }

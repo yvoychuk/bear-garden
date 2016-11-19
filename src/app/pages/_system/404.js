@@ -1,10 +1,14 @@
-class Error404 {
-  constructor(props) {
-    this.x = 100;    
+import * as utils from "../../utils.js"
+import Page from "../_page.js"
+
+class Error404 extends Page {
+  constructor (props) {
+    super(props);
+    this.render(props);
   }
-  static render () {
-    console.log("404 rendered")
-    return false;
+  render (props) {
+    utils.test();
+    utils.appendElementWithText(props.root, "page not found");
   }
 }
 
