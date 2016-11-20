@@ -1,7 +1,7 @@
 import utils from "../utils.js"
-import Page from "./_page.js"
+import Page from "../system/page.js"
 
-class notA extends Page {
+class Todo extends Page {
   constructor (props) {
     super(props);
     this.render(props);
@@ -12,4 +12,4 @@ class notA extends Page {
   }
 }
 
-module.exports = notA;
+module.exports = Todo;

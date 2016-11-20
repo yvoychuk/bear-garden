@@ -21,6 +21,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-pug": "^3.1.0",
     "gulp-stylus": "^2.5.0",
+    "json-loader": "^0.5.4",
     "lodash-webpack-plugin": "^0.10.5",
     "run-sequence": "^1.2.2",
     "webpack": "^1.13.2",

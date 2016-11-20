@@ -1,6 +1,7 @@
-// hash based
 import _ from "lodash";
 import utils from "./utils.js";
+import * as errors from "./system/errors.js";
+import * as meta from "./system/meta.js"
 
 class Router {
   constructor() {
@@ -28,9 +29,17 @@ class Router {
     }
   }
 
-  createNewPage (path, props) {
-    let NewPage = require("./pages/" + path + ".js");
+  createNewPage (path, data, props) {
+    let NewPage = require("./views/" + path + ".js");
     let renderedPage = new NewPage({
+      root: props.root
+    });
+    meta.setMetadata(data);
+    return false;
+  }
+
+  createErrorPage (props) {
+    let ErrorPage = new errors.Error404({
       root: props.root
     });
     return false;
@@ -41,10 +50,10 @@ class Router {
       let currentPath = this.current();
       let page = this.pages.find(function (p) {return p.path === currentPath || p.name === currentPath})
       let pageName = page.path;
-      this.createNewPage(page.path, this.props);
+      this.createNewPage(page.path, page, this.props);
     } catch (e) {
       console.log(e)
-      this.createNewPage("_system/404", this.props);
+      this.createErrorPage(this.props);
     }
   }
 
