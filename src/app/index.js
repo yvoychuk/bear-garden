@@ -27,7 +27,13 @@
     },
     {
       path: "gmap"
-    }
+    },
+    {
+      path: "timers",
+      meta: {
+        title: "Timers"
+      }
+    },
   ];
 
   router.register(views, {

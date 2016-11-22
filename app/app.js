@@ -71,6 +71,11 @@
 	    }
 	  }, {
 	    path: "gmap"
+	  }, {
+	    path: "timers",
+	    meta: {
+	      title: "Timers"
+	    }
 	  }];
 
 	  router.register(views, {
@@ -214,8 +219,12 @@
 	    appendElementWithText: function appendElementWithText(rootComponent) {
 	      var text = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "sample";
 	      var elementName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "p";
+	      var id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
 	      var element = document.createElement(elementName);
+	      if (id !== null) {
+	        element.id = id;
+	      };
 	      element.innerHTML = text;
 	      rootComponent.appendChild(element);
 	      return false;
@@ -351,7 +360,8 @@
 		"./app.js": 7,
 		"./codewars.js": 8,
 		"./gmap.js": 10,
-		"./todo.js": 11
+		"./timers.js": 11,
+		"./todo.js": 12
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -550,6 +560,112 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utils = __webpack_require__(2);
+
+	var utils = _interopRequireWildcard(_utils);
+
+	var _page = __webpack_require__(4);
+
+	var _page2 = _interopRequireDefault(_page);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Timers = function (_Page) {
+	  _inherits(Timers, _Page);
+
+	  function Timers(props) {
+	    _classCallCheck(this, Timers);
+
+	    var _this = _possibleConstructorReturn(this, (Timers.__proto__ || Object.getPrototypeOf(Timers)).call(this, props));
+
+	    _this.render(props);
+	    return _this;
+	  }
+
+	  _createClass(Timers, [{
+	    key: "fib",
+	    value: function fib(count) {
+	      var arr = [0, 1];
+	      for (var i = 2; i < count; i++) {
+	        arr[i] = arr[i - 2] + arr[i - 1];
+	      };
+	      return arr;
+	    }
+	  }, {
+	    key: "testTime",
+	    value: function testTime(fn) {
+	      var args = [].slice.call(arguments).slice(1);
+	      var t1 = Date.now();
+	      fn.apply(null, args);
+	      var t2 = Date.now();
+	      var delta = t2 - t1;
+	      return "delta(ms): " + delta + "; delta(s): " + delta / 1000;
+	    }
+
+	    // NOTE: there is a wormhole when some process in system occured
+
+	  }, {
+	    key: "timer",
+	    value: function timer(timerId, startTime, preset) {
+	      var cb = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+	      var start = null;
+	      var counter = 0;
+	      var time = startTime;
+	      var filter = [0, performance.now()];
+	      var iter = function iter(ts) {
+	        if (!start) start = ts;
+	        var deltaFloor = Math.floor((ts - start) / 1000);
+	        if (deltaFloor !== counter) {
+	          filter[0] = filter[1];
+	          filter.pop();
+	          filter.push(performance.now());
+	          var fault = Math.abs(1000 - (filter[1] - filter[0])) * (10 / 1000);
+	          if (fault < 0.5) {
+	            console.log(time, fault); //ts, performance.now(), Date.now()
+	          } else console.log("waiting for stable state");
+	          counter++;
+	          var i = preset > startTime ? 1 : -1;
+	          time += i;
+	        }
+	        if (time !== preset) {
+	          window.requestAnimationFrame(iter);
+	        } else return;
+	      };
+	      window.requestAnimationFrame(iter);
+	      return false;
+	    }
+	  }, {
+	    key: "render",
+	    value: function render(props) {
+	      var timerId1 = "timer-1";
+	      utils.appendElementWithText(props.root, "", "div", timerId1);
+	      this.timer(timerId1, 0, 100, "asc");
+	      // utils.appendElementWithText(props.root, this.testTime(this.fib, 100));
+	    }
+	  }]);
+
+	  return Timers;
+	}(_page2.default);
+
+	module.exports = Timers;
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

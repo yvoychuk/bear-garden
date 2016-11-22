@@ -6,15 +6,18 @@ var Utils = (function () {
       console.log(t)
     },
 
-    appendElementWithText: function (rootComponent, text="sample", elementName = "p") {
+    appendElementWithText: function (rootComponent, text="sample", elementName = "p", id=null) {
       let element = document.createElement(elementName);
-      element.innerHTML = text;    
+      if (id !== null) {
+        element.id = id
+      };
+      element.innerHTML = text;
       rootComponent.appendChild(element);
       return false;
     }
 
   }
-  
+
 })()
 
 module.exports = Utils
