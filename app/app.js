@@ -228,6 +228,35 @@
 	      element.innerHTML = text;
 	      rootComponent.appendChild(element);
 	      return false;
+	    },
+
+	    appendElementWithId: function appendElementWithId(parentId) {
+	      var elementName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "div";
+	      var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "id";
+
+	      var element = document.createElement(elementName);
+	      if (id !== null) {
+	        element.id = id;
+	      };
+	      document.getElementById(parentId).appendChild(element);
+	      return false;
+	    },
+
+	    appendLinkElement: function appendLinkElement(parentId, id, props) {
+	      /* props:
+	      - href
+	      - target
+	      - text
+	      */
+	      var link = document.createElement("a");
+	      Object.assign(link, {
+	        id: id,
+	        href: props.href || "",
+	        target: props.target || "_self"
+	      });
+	      link.innerHTML = props.text || "link";
+	      document.getElementById(parentId).appendChild(link);
+	      return false;
 	    }
 
 	  };
@@ -420,6 +449,19 @@
 	    value: function render(props) {
 	      utils.test();
 	      utils.appendElementWithText(props.root, "page app index");
+	      utils.appendElementWithId("app", "nav", "navigation");
+	      utils.appendElementWithId("navigation", "div", "nav-item-1");
+	      utils.appendLinkElement("nav-item-1", "link-timer", {
+	        href: "#timers",
+	        text: "timers",
+	        target: "_self"
+	      });
+	      utils.appendElementWithId("navigation", "div", "nav-item-2");
+	      utils.appendLinkElement("nav-item-2", "link-codewars", {
+	        href: "#codewars",
+	        text: "codewars tasks",
+	        target: "_self"
+	      });
 	    }
 	  }]);
 
@@ -492,13 +534,34 @@
 	      return [a, aplus, a * aplus === prod];
 	    }
 	  }, {
+	    key: "duplicateCount",
+	    value: function duplicateCount(text) {
+	      var u = [];
+	      var test = function test(a, it) {
+	        return {
+	          dupl: a.find(function (i) {
+	            return i === it;
+	          }),
+	          uniq: a.filter(function (i) {
+	            return i === it;
+	          }).length > 1
+	        };
+	      };
+	      return text.toLowerCase().split("").filter(function (item, index, arr) {
+	        if (test(arr, item).uniq && !test(u, item).dupl) {
+	          u.push(item);
+	          return item;
+	        }
+	      }).length;
+	    }
+	  }, {
 	    key: "render",
 	    value: function render(props) {
-	      var pf = this.productFib(41);
+	      var dc = this.duplicateCount("abccCC");
 	      // this.productFib(100);
-	      utils.test(pf);
+	      utils.test(dc);
 	      // tests.assertSimilar(uio, ['A', 'B', 'C', 'c', 'A', 'D']);
-	      utils.appendElementWithText(props.root, "page a");
+	      utils.appendElementWithText(props.root, dc);
 	    }
 	  }]);
 
@@ -615,13 +678,27 @@
 	      var delta = t2 - t1;
 	      return "delta(ms): " + delta + "; delta(s): " + delta / 1000;
 	    }
+	  }, {
+	    key: "createTimeElement",
+	    value: function createTimeElement(id, parent) {
+	      var element = document.createElement("div");
+	      element.id = id;
+	      parent.appendChild(element);
+	    }
+	  }, {
+	    key: "showTime",
+	    value: function showTime(currentTime) {
+	      console.log(this);
+	      var element = document.getElementById(this.id);
+	      element.innerHTML = "time: " + currentTime;
+	    }
 
 	    // NOTE: there is a wormhole when some process in system occured
 
 	  }, {
 	    key: "timer",
-	    value: function timer(timerId, startTime, preset) {
-	      var cb = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+	    value: function timer(startTime, preset) {
+	      var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
 	      var start = null;
 	      var counter = 0;
@@ -636,7 +713,8 @@
 	          filter.push(performance.now());
 	          var fault = Math.abs(1000 - (filter[1] - filter[0])) * (10 / 1000);
 	          if (fault < 0.5) {
-	            console.log(time, fault); //ts, performance.now(), Date.now()
+	            // console.log(time, fault);
+	            callback(time);
 	          } else console.log("waiting for stable state");
 	          counter++;
 	          var i = preset > startTime ? 1 : -1;
@@ -653,8 +731,8 @@
 	    key: "render",
 	    value: function render(props) {
 	      var timerId1 = "timer-1";
-	      utils.appendElementWithText(props.root, "", "div", timerId1);
-	      this.timer(timerId1, 0, 100, "asc");
+	      this.createTimeElement(timerId1, props.root);
+	      this.timer(0, 100, this.showTime.bind(Object.assign(this, { id: timerId1 })));
 	      // utils.appendElementWithText(props.root, this.testTime(this.fib, 100));
 	    }
 	  }]);

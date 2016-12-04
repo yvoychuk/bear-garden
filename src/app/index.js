@@ -3,14 +3,14 @@
 (function () {
 
   var rootComponent = document.getElementById("app");
-  
+
   let Router = require("./router.js");
 
   let router = new Router;
 
   let views = [
     {
-      path: "app", 
+      path: "app",
       name: "index",
       meta: {
         title: "Index page"

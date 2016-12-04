@@ -25,9 +25,20 @@ class Timers extends Page {
     return "delta(ms): " + delta + "; delta(s): " + delta/1000;
   }
 
+  createTimeElement (id, parent) {
+    let element = document.createElement("div");
+    element.id = id;
+    parent.appendChild(element);
+  }
+
+  showTime (currentTime) {
+    console.log(this);
+    let element = document.getElementById(this.id);
+    element.innerHTML = "time: " + currentTime;
+  }
 
   // NOTE: there is a wormhole when some process in system occured
-  timer (timerId, startTime, preset, cb = null) {
+  timer (startTime, preset, callback = null) {
     let start = null;
     let counter = 0;
     let time = startTime;
@@ -41,7 +52,8 @@ class Timers extends Page {
         filter.push(performance.now());
         let fault = Math.abs(1000 - (filter[1] - filter[0])) * (10 / 1000);
         if (fault < 0.5) {
-          console.log(time, fault); //ts, performance.now(), Date.now()
+          // console.log(time, fault);
+          callback(time);
         }
         else console.log("waiting for stable state")
         counter++;
@@ -58,8 +70,8 @@ class Timers extends Page {
 
   render (props) {
     let timerId1 = "timer-1";
-    utils.appendElementWithText(props.root, "", "div", timerId1);
-    this.timer(timerId1, 0, 100, "asc");
+    this.createTimeElement(timerId1, props.root)
+    this.timer(0, 100, this.showTime.bind(Object.assign(this, {id:timerId1})));
     // utils.appendElementWithText(props.root, this.testTime(this.fib, 100));
   }
 
